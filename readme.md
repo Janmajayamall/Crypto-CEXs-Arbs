@@ -19,3 +19,4 @@ Good tools:
 API packages used:
     1. binance python package: https://pypi.org/project/python-binance/
     2. python-bittrex websocket = https://github.com/slazarov/python-bittrex-websocket
+    a
