@@ -1,16 +1,20 @@
 from common_wss import wss_client
 import pandas as pd
+from websockets_cryptos.constants import ClientResponse, send_it
+import websockets_cryptos.constants as constants
+
 
 
 
 class KrakenWSS():
 
-    def __init__(self):
+    def __init__(self, base_asset, quote_asset):
         self.global_dict={}
         self.kraken_order_book_cols = ['price', 'volume', 'timestamp']
         self.stream_url = 'wss://ws.kraken.com'
-        self.curreny_pair_arr = [
-            "XBT/USD"            ]
+        self.curreny_pair_arr = [base_asset+"/"+quote_asset]
+        self.base_asset = base_asset
+        self.quote_asset = quote_asset
         
         
     def order_book_handler(self, response):
@@ -97,12 +101,23 @@ class KrakenWSS():
         my_client.subscribe_public(payload, callback=self.order_book_handler,id_="_krakenSuscribeBook")
         my_client.start()
 
-    def ticker_handler(self, response):
-        print('ww')
-        print(response)
+    def ticker_handler(self, response): 
+        if type(response)==type([]):
+            client_response = ClientResponse(
+                                    base_asset=self.base_asset, 
+                                    quote_asset=self.quote_asset,
+                                    best_bid=response[1]['b'][0],
+                                    bid_quantity=response[1]['b'][2],
+                                    best_ask=response[1]['a'][0],
+                                    ask_quantity=response[1]['a'][2],
+                                    base_asset_alt="",
+                                    quote_asset_alt="",
+                                    exchange=constants.KRAKEN
+                                )
+            send_it(client_response.get_dict())
+
 
     def get_price_quote(self):
-        print('ww')
         my_client = wss_client.WssClient(self.stream_url)
         payload = {
             "event": "subscribe",
@@ -118,5 +133,5 @@ class KrakenWSS():
 
     
 
-krakenWss = KrakenWSS()
-krakenWss.get_price_quote()
+# krakenWss = KrakenWSS('EOS', 'ETH')
+# krakenWss.get_price_quote()
