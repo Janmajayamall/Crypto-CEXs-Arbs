@@ -114,11 +114,11 @@ def get_asset_pairs():
 
     # dictionary of asset pairs
     return({
+        constants.BINANE_EXCHANGE:client.binance_exchange(),
         constants.COINBASE:client.coinbase(),
         constants.DERIBIT:client.deribit(),
         constants.KRAKEN:client.kraken(),
         constants.HOUBI:client.houbi(),
         constants.OKEX:client.okex(),
-        constants.BITMEX:client.bitmex(),
-        constants.BINANE_EXCHANGE:client.binance_exchange()
+        constants.BITMEX:client.bitmex()
     })

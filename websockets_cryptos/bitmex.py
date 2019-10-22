@@ -4,12 +4,13 @@ from websockets_cryptos.constants import ClientResponse, send_it
 from websockets_cryptos import constants
 
 class BitmexWSS():
-    def __init__(self, base_asset, quote_asset):
+    def __init__(self, base_asset, quote_asset, callback_func):
         self.global_dict={}
         self.stream_url = 'wss://www.bitmex.com/realtime'
         self.pair = base_asset+quote_asset
         self.base_asset = base_asset
-        self.quote_asset = quote_asset,
+        self.quote_asset = quote_asset
+        self.callback_func = callback_func
 
 
     def ticker_handler(self, response):
@@ -25,7 +26,7 @@ class BitmexWSS():
                                                 quote_asset_alt="",
                                                 exchange=constants.BITMEX
                                             )            
-            send_it(client_response.get_dict())
+            self.callback_func.channel_publish(client_response.get_dict())
 
     def get_price_quote(self):
         my_client = wss_client.WssClient(self.stream_url)

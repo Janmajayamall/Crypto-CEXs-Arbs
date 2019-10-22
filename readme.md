@@ -22,6 +22,11 @@ API packages used:
     a
 
 
+References for RABBITMQ (AMQP):
+    1. https://www.rabbitmq.com/install-homebrew.html
+
+
+
 
 
 Points to do:

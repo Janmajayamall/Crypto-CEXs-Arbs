@@ -2,15 +2,17 @@ from common_wss import wss_client
 import pandas as pd
 from websockets_cryptos.constants import ClientResponse, send_it
 import json
-from websockets_cryptos import constants
+import websockets_cryptos.constants as constants
+
 
 class HoubiWSS():
-    def __init__(self, base_asset, quote_asset):
+    def __init__(self, base_asset, quote_asset, callback_func):
         self.global_dict={}
         self.stream_url = "wss://api.huobi.pro/ws"
         self.pair = base_asset.lower()+quote_asset.lower()
         self.base_asset = base_asset
         self.quote_asset = quote_asset
+        self.callback_func = callback_func
 
     def ticker_handler(self, response):
         response=json.loads(response)
@@ -26,7 +28,7 @@ class HoubiWSS():
                                                 quote_asset_alt="",
                                                 exchange=constants.HOUBI
                                             )
-            send_it(client_response.get_dict())
+            self.callback_func.channel_publish(client_response.get_dict())
 
 
 
@@ -38,7 +40,7 @@ class HoubiWSS():
 
 
 
-# client = HoubiWSS("LTC", "BTC")
+# client = HoubiWSS("LTC", "BTC", send_it)
 # client.get_price_quote()
 
 

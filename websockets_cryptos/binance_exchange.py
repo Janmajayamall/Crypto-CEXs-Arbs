@@ -5,7 +5,7 @@ import copy
 import websockets_cryptos.constants as constants
 class BinanceWss():
 
-    def __init__(self, base_asset, quote_asset):
+    def __init__(self, base_asset, quote_asset, callback_func):
         '''
         Reference:
             Please use @https://python-binance.readthedocs.io/en/latest/websockets.html for further API reference
@@ -17,6 +17,7 @@ class BinanceWss():
         self.pair = base_asset+quote_asset
         self.base_asset = base_asset
         self.quote_asset = quote_asset
+        self.callback_func = callback_func
 
     def ticker_handler(self, response):
         client_response = ClientResponse(
@@ -30,13 +31,11 @@ class BinanceWss():
                                             quote_asset_alt="",
                                             exchange=constants.BINANE_EXCHANGE
                                          )
-        send_it(client_response.get_dict())
+        self.callback_func.channel_publish(client_response.get_dict())
 
     def get_price_quote(self):
         conn = self.binance_socket_manager.start_symbol_ticker_socket(self.pair,self.ticker_handler)
         self.binance_socket_manager.start()
 
-# clinet=BinanceWss("ETH", "BTC")
+# clinet=BinanceWss("IOTA", "BTC", send_it )
 # clinet.get_price_quote()
-
-
